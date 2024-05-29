@@ -1,6 +1,15 @@
+interface IAppState {
+	catalog: IProduct[];
+	basket: IProduct[];
+	preview: string | null;
+	order: IOrder | null;
+}
+
 interface IPage {
-    items: IProduct[];
- }
+    counter: number;
+    catalog: HTMLElement[];
+    locked: boolean;
+}
 
 interface IProduct {
     id: string;
@@ -11,34 +20,23 @@ interface IProduct {
     price: number | null;
 }
 
-interface IProductModel {
-    items: IProduct[];
-    preview: string | null;
-    setItems(items: IProduct[]): void; // чтобы установить после загрузки из апи
-    getProduct(id: string): IProduct; //чтобы получить при рендере списков
+interface ICard extends IProduct {
+    button?: string;
 }
 
-interface IBucket {
-    total: number,
-    items: IProduct[];
-}
-
-interface IBucketModel {
-    items: Map<string, number>;
-    add(id: string): void;
-    remove(id: string): void;
-}
-
-interface IOrderModel
- {
+interface IOrderAddress {
     payment: TPaymentMethod;
-    email: string;
-    phone: string;
     address: string;
 }
 
-interface IOrder extends IOrderModel {
-    items: string[]
+interface IOrderContacts {
+    email: string;
+    phone: string;
+}
+
+interface IOrder extends IOrderForm {
+    items: string[];
+    total: number;
 }
 
 interface IOrderResult {
@@ -46,31 +44,24 @@ interface IOrderResult {
     total: number;
 }
 
+interface ISuccess {
+    total: number;
+}
+
+interface IModalData {
+    content: HTMLElement;
+}
+  
+interface IBasketView {
+    items: HTMLElement[];
+    total: number;
+}
+
 interface IEventEmitter {
     emit: (event: string, data: unknown) => void;
 }
 
-// Отображение
-interface IViewConstructor {
-    new(container: HTMLElement, events?: IEventEmitter): IView; // На входе контейнер, в него будем выводить
-}
-
-// Конструктор отображения
-interface IView {
-    render(data?: object): HTMLElement; // Устанавливаем данные, возвращвем контейнер
-}
-
-// Хорошая практика даже простые типы выносить в алиасы
-// Зато когда захотите поменять это достаточно сделать в одном месте
-
+type IBasketItem = Pick<IProduct, 'id' | 'title' | 'price'>;
 type TPaymentMethod = 'cash' | 'online' | null;
-
-type TProductBaseInfo = Pick<IProduct, 'image' | 'title' | 'category' | 'price'>;
-
-type TProductInfo = Pick<IProduct, 'description' | 'image' | 'title' | 'category' | 'price'>;
-
-type TProductInBucket = Pick<IProduct, 'id' | 'title' | 'price'>;
-
-type TContactsForm = Pick<IOrderModel, 'email' | 'phone'>;
-
-type TAddressForm = Pick<IOrderModel, 'payment' | 'address'>;
+type IOrderForm = IOrderAddress & IOrderContacts;
+type FormErrors = Partial<Record<keyof IOrder, string>>;
