@@ -118,6 +118,7 @@ events.on('success:close', () => {
 
 // Открытие корзины
 events.on('basket:open', () => {
+    //basket.selected = appData.basket;
     //const isBasketEmpty = appData.basket.length === 0;
     page.setCounter(appData.order.items.length);
     //basket.setDisabled(basket.button, isBasketEmpty);
@@ -150,7 +151,7 @@ events.on('basket:changed', () => {
 	// Обновление состояния кнопки
 	//basket.selected = appData.order.items;
     // Или
-    basket.selected = basketProducts.map((item) => item.title);
+    //basket.selected = basketProducts.map((item) => item.title);
 });
 
 // Удаление из корзины и обновление счетчика
