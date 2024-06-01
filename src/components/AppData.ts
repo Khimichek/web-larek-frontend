@@ -1,7 +1,7 @@
 //import _ from "lodash";
 
 import {Model} from "./base/Model";
-import {IFormErrors, IAppState, IOrderAPI, IBasketItem, IProduct, IOrder, IOrderForm, IOrderAddress, IOrderContacts} from "../types/index";
+import {IFormErrors, IAppState, IOrderAPI, IProduct, IOrder, IOrderForm, IOrderAddress, IOrderContacts} from "../types/index";
 
 export type CatalogChangeEvent = {
     catalog: Product[]
@@ -51,7 +51,6 @@ export class AppState extends Model<IAppState> {
 		return this._order;
 	}
     
-
     getOrderAPI() {
 		const orderApi: IOrderAPI = {
 			payment: this._order.payment,
@@ -96,22 +95,12 @@ export class AppState extends Model<IAppState> {
 		this.emitChanges('basket:changed');
     }
 
-    /*getBasketProducts = (): IProduct[] =>
-        this.catalog
-            .filter((item) => item.isOrdered);*/
-
-
     clearBasket() {
         //this.basket = []
         this._order.items = [];
         this.emitChanges('basket:changed');
     }
 
-/*    getTotal() {
-        let sum = 0;
-        this.basket.forEach(item => { sum = sum + item.price });
-        return sum;
-    }*/
 	getTotal() {
 		this._order.total = this._order.items.reduce((a, c) => a + c.price, 0);
 		return this._order.total; //+100; //add error to test

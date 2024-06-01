@@ -1,4 +1,4 @@
-import {Form} from "./common/Form";
+import { Form } from "./common/Form";
 import {IOrderContacts, IOrderAddress, IOrderForm} from "../types/index";
 import {EventEmitter, IEvents} from "./base/events";
 import {ensureElement} from "../utils/utils";
@@ -8,7 +8,6 @@ export class OrderAddress extends Form<IOrderAddress> {
     protected _cashButton: HTMLButtonElement;
     protected _paymentContainer: HTMLDivElement;
     payment: string;
-    //protected _addressInput: HTMLInputElement;
 
     constructor(container: HTMLFormElement, events: IEvents) {
         super(container, events);
@@ -16,7 +15,6 @@ export class OrderAddress extends Form<IOrderAddress> {
         this._paymentContainer = ensureElement<HTMLDivElement>('.order__buttons', this.container);
         this._onlineButton = this._paymentContainer.querySelector('[name="card"]');
         this._cashButton = this._paymentContainer.querySelector('[name="cash"]');
-        //this._addressInput = container.elements.namedItem('address') as HTMLInputElement;
 
         if (this._cashButton) {
 			this._cashButton.addEventListener('click', (el) => {

@@ -67,6 +67,7 @@ interface IProduct {
     title: string;
     category: string;
     price: number | null;
+    getId(): string;
 }
 ```
 Интерфейс для отображения карточки товара:
@@ -97,17 +98,22 @@ type IOrderForm = IOrderAddress & IOrderContacts;
 ```
 type FormErrors = Partial<Record<keyof IOrder, string>>;
 ```
-Интерфейс, описывающий общие данные заказа:
+Интерфейс для отправки данных списка заказов на сервер:
 ```
-interface IOrder extends IOrderForm {
-    items: string[];
-    total: number;
+interface IOrder {
+	id: string;
+	payment: string;
+	email: string;
+	phone: string;
+	address: string;
+	total: number;
+	items: IProduct[];
 }
 ```
 Интерфейс, описывающий результат заказа:
 ```
 interface IOrderResult {
-    id: string;
+    id: string[];
     total: number;
 }
 ```
@@ -128,11 +134,27 @@ interface IModalData {
 interface IBasketView {
     items: HTMLElement[];
     total: number;
+    button: HTMLButtonElement;
 }
 ```
-Тип данных для отображения отдельного товара в корзине:
+Интерфейс данных корзины с товарами:
 ```
-type IBasketItem = Pick<IProduct, 'id' | 'title' | 'price'>;
+interface IBasketModel {
+    items: IProduct[];
+    getTotal(): number;
+    add(id: IProduct): void;
+    remove(id: IProduct): void;
+    clearBasket(): void;
+}
+```
+Интерфейс для отображения отдельного продукта в корзине:
+```
+export interface IBasketProduct {
+    deleteButton: string;
+    index: number;
+    title: string;
+    price: number;
+}
 ```
 Брокер событий:
 ```
@@ -219,11 +241,13 @@ interface IEventEmitter {
 - `formErrors: FormErrors` - валидация форм при оформлении заказа.
 
 Методы класса:
+- `getOrderAPI()` - получает данные заказа с сервера.
 - `addBasket()` - добавляет товар в корзину.
-- `deleteBasket()` - удаляет товар из корзину.
+- `removeBasket()` - удаляет товар из корзину.
 - `clearBasket()` - очищает всю корзину.
 - `getTotal()` - определяет итоговую стоимость в корзине.
-- `setCatalog`( items: ILot[ ] ) - устанавливает каталог карточек
+- `updateCounter()` - обновляет счётчик корзины.
+- `setCatalog` ( items: ILot[ ] ) - устанавливает каталог карточек
 - `setPreview` ( item: LotItem) - показывает товар в модальном окне.
 - `setOrderField` ( field: keyof IOrderForm, value: string ) - устанавливает валидацию форм.
 - `validateOrderAddress()` - валидация формы с адресом доставки и выбором способа оплаты.
@@ -239,7 +263,11 @@ interface IEventEmitter {
 - `title: string` - название продукта.
 - `category: string` - категория продукта.
 - `price: number` - стоимость продукта.
+- `isOrdered: boolean` - продукт заказан или не заказан.
+- `index: number` - индекс продукта в корзине.
 
+Методы класса:
+- `getId(): string` - получает идентификатор конкретного товара.
 
 ### Классы представления
 Все классы представления отвечают за отображение внутри контейнера (DOM-элемент) передаваемых в них данных.
@@ -305,11 +333,7 @@ interface IEventEmitter {
 - `set image` (value: string) - устанавливает изображение товара.
 - `set description` (value: string | string[]) - устанавливает описание товара.
 - `set price` : number | nul - устанавливает стоимость товара.
-- `get price()` : number | null - получает стоимость товара.
-- `set price()` : number | nul - устанавливает стоимость товара.
-- `get price()` : number | null - получает стоимость товара.
 - `set category()` : string - устанавливает категорию товара.
-- `get category()` : string - получает категорию товара.
 
 #### Класс Basket
 Реализует отображение корзины и товаров, добавленных в неё, а также, предоставляет методы для управления ими.
@@ -324,8 +348,24 @@ interface IEventEmitter {
 
 Методы:
 - `set items` (items: HTMLElement[]) - устанавливает список товаров в корзине.
-- `setButtonState` (items: string[]) - устанавливает состояние кнопки оформления заказа, в зависимости от наличия товаров в корзине.
 - `set total` (total: number) - устанавливает итоговую стоимость товаров в корзине.
+
+#### Класс Basket
+Реализует отображение товаров, добавленных в корзину, а также, предоставляет методы для управления ими.
+
+Конструктор класса:
+`constructor(container: HTMLElement, actions?: IBasketActions)` - принимает элемент контейнера и действие, доступное для управление товаром в корзине.
+
+Свойства класса:
+- `protected _deleteButton: HTMLButtonElement;` - кнопка удаления товара из корзины.
+- `protected _index: HTMLElement;` - индекс товара.
+- `protected _title: HTMLElement;` - название товара.
+- `protected _price: HTMLElement;` - стоимость товара.
+
+Методы:
+- `set title` (value: string[]) - устанавливает название товара.
+- `set index` (value: number) - устанавливает индекс товара.
+- `set price` (value: number) - устанавливает стоимость товара в корзине.
 
 #### Класс Form
 Предназначен для отображения формы и взаимодействия с ней.
@@ -363,12 +403,14 @@ interface IEventEmitter {
 - `constructor(container: HTMLFormElement, events: IEvents)` - вызывает конструктор родительского класса `Form`, принимает элемент формы и объект для управления событиями.
 
 Свойства класса:
-- `address: string` - адрес доставки.
+- `protected _onlineButton: HTMLButtonElement` - кнопка Онлайн-заказа.
+- `protected _cashButton: HTMLButtonElement` - кнопка оплаты наличными.
+- `protected _paymentContainer: HTMLDivElement` - контейнер с кнопками выбора оплаты.
 - `payment: string` - способ оплаты заказа, выбранный пользователем.
 
 Методы:
 - `set address` (value: string) - устанавливает адрес доставки.
-- `set payment` (value: string) - устанавливает способ оплаты.
+- `setPayment` (field: keyof IOrderForm, value: string) - устанавливает способ оплаты.
 
 #### Класс OrderContacts
 Класс отвечает за хранение и изменение данных пользователя при оформлении заказа. Предназначен для отображения и управления формой контактов.
@@ -377,8 +419,9 @@ interface IEventEmitter {
 - `constructor(container: HTMLFormElement, events: IEvents)` - вызывает конструктор родительского класса `Form`, принимает элемент формы и объект для управления событиями.
 
 Свойства класса:
-- `phone: string` - email пользователя.
-- `email: string` - номер телефона пользователя.
+- `protected _button: HTMLElement` - кнопка сабмита.
+- `protected _phone: string` - email пользователя.
+- `protected _email: string` - номер телефона пользователя.
 
 Методы:
 - `set phone` (value: string) - устанавливает номер телефона в форме контактов.
@@ -389,23 +432,21 @@ interface IEventEmitter {
 Код, описывающий взаимодействие представления и данных между собой находится в файле `index.ts`, выполняющем роль презентера. Взаимодействие осуществляется за счет событий, генерируемых с помощью брокера событий и обработчиков этих событий, описанных в `index.ts`. В `index.ts` сначала создаются экземпляры всех необходимых классов, а затем настраивается обработка событий.
 
 ***Список всех событий, которые могут генерироваться в системе:***\
-События изменения данных (генерируются классами моделями данных):
-- `user:changed` - изменение данных пользователя
-- `items:changed` - изменение каталога товаров
-- `basket:changed` - изменение содержимого корзины
+- `card:select` - выбор товара для отображения в модальном окне.
+- `items:changed` - изменение каталога карточек.
+- `preview:changed` - изменение открытой карточки.
+- `basket:open` - открытие модального окна корзины.
+- `basket:changed` - изменение корзины.
+- `basket:item-add` - добавление товара в корзину.
+- `basket:remove` - удаление товара из корзины.
+- `order:submit` - отправка формы адреса и способа оплаты.
+- `order:open` - открытие формы адреса и способа оплаты.
+- `order:change` - изменение одного из полей формы адреса и способа оплаты.
+- `contacts:change` - изменение одного из полей формы контактов.
+- `formErrors:change` - изменение состояния валидации формы адреса и способа оплаты.
+- `formErrorsContacts:change` - изменение состояния валидации формы контактов.
+- `success:open` - открытие окна успешного заказа.
+- `success:close` - закрытие окна успешного заказа.
+- `modal:open` - открытие модального окна.
+- `modal:close` - закрытие модального окна.
 
-События, возникающие при взаимодействии пользователя с интерфейсом (генерируются классами, отвечающими за представление):
-- `product:open` - открытие модального окна карточки товара
-- `product:select` - выбор товара для отображения в модальном окне
-- `product:add` - добавление товара в корзину
-- `product:remove` - удаление товара из корзины
-- `basket:open` - открытие модального окна корзины
-- `address:open` - открытие модального окна адреса и способа оплаты
-- `payment:toggle` - изменение способа оплаты
-- `address:input` - изменение данных в форме с адресом
-- `address:validation` - событие, сообщающее о необходимости валидации формы адреса
-- `address:submit` - отправка формы адреса
-- `contacts:open` - открытие модального окна почты и телефона
-- `contacts:input` - изменение данных в форме с почтой и телефоном
-- `contacts:validation` - событие, сообщающее о необходимости валидации формы контактов
-- `address:submit` - отправка формы контактов

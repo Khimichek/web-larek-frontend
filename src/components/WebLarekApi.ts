@@ -4,7 +4,6 @@ import {IOrder, IOrderResult, IOrderAPI, IProduct} from "../types";
 export interface IWebLarekAPI {
     getProductList: () => Promise<IProduct[]>;
     getProductItem: (id: string) => Promise<IProduct>;
-    //orderProducts: (order: IOrderAPI) => Promise<IOrderResult>;
 }
 
 export class WebLarekAPI extends Api implements IWebLarekAPI {

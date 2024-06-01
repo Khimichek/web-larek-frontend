@@ -35,11 +35,6 @@ export interface IOrderContacts {
     phone: string;
 }
 
-/*export interface IOrder extends IOrderForm {
-    items: string[];
-    total: number;
-}*/
-
 export interface IOrder {
 	id: string;
 	payment: string;
@@ -98,7 +93,5 @@ export interface IEventEmitter {
     emit: (event: string, data: unknown) => void;
 }
 
-export type IBasketItem = Pick<IProduct, 'id' | 'title' | 'price'>;
-//export type TPaymentMethod = 'cash' | 'online' | null;
 export type IOrderForm = IOrderAddress & IOrderContacts;
 export type IFormErrors = Partial<Record<keyof IOrder, string>>;

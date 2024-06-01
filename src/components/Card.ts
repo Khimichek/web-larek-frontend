@@ -12,7 +12,7 @@ export interface IButtonOptions {
 	buttonText: string;
 }
 
-export interface ICard<T> {
+export interface ICard {
     id: string;
     description: string;
     image: string;
@@ -22,7 +22,7 @@ export interface ICard<T> {
     button?: string;
 }
 
-export class Card<T> extends Component<ICard<T>> {
+export class Card extends Component<ICard> {
     protected _title: HTMLElement;
     protected _image?: HTMLImageElement;
     protected _description?: HTMLElement;
@@ -101,135 +101,9 @@ export class Card<T> extends Component<ICard<T>> {
             this.setText(this._button, 'Нельзя купить');
 		}
 	}
-/*
-    //устанавливаем текст на кнопку
-	set buttonText(value: string) {
-		this.setText(this._button, value);
-		// обновляем состояние кнопки в зависимости от текста
-		if (value === 'Уже в корзине') {
-			this.setDisabled(this._button, true);
-		}
-	}
-*/
 
-set category(value: string) {
-    this.setText(this._category, value);
-    this._category.classList.add(this.categoryProperties[value]);
-}
-}
-
-//export type CatalogItemStatus = {
- //   status: LotStatus,
- //   label: string
-//};
-
-/*export class CatalogItem extends Card<CatalogItemStatus> {
-    protected _status: HTMLElement;
-
-    constructor(container: HTMLElement, actions?: ICardActions) {
-        super('card', container, actions);
-        this._status = ensureElement<HTMLElement>(`.card__status`, container);
-    }
-
-    set status({ status, label }: CatalogItemStatus) {
-        this.setText(this._status, label);
-        this._status.className = clsx('card__status', {
-            [bem(this.blockName, 'status', 'active').name]: status === 'active',
-            [bem(this.blockName, 'status', 'closed').name]: status === 'closed'
-        });
-    }
-}*/
-
-/*
-interface IAuctionActions {
-    onSubmit: (price: number) => void;
-}*/
-
-/*export class Auction extends Component<AuctionStatus> {
-    protected _time: HTMLElement;
-    protected _label: HTMLElement;
-    protected _button: HTMLButtonElement;
-    protected _input: HTMLInputElement;
-    protected _history: HTMLElement;
-    protected _bids: HTMLElement
-    protected _form: HTMLFormElement;
-
-    constructor(container: HTMLElement, actions?: IAuctionActions) {
-        super(container);
-
-        this._time = ensureElement<HTMLElement>(`.lot__auction-timer`, container);
-        this._label = ensureElement<HTMLElement>(`.lot__auction-text`, container);
-        this._button = ensureElement<HTMLButtonElement>(`.button`, container);
-        this._input = ensureElement<HTMLInputElement>(`.form__input`, container);
-        this._bids = ensureElement<HTMLElement>(`.lot__history-bids`, container);
-        this._history = ensureElement<HTMLElement>('.lot__history', container);
-        this._form = ensureElement<HTMLFormElement>(`.lot__bid`, container);
-
-        this._form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            actions?.onSubmit?.(parseInt(this._input.value));
-            return false;
-        });
-    }
-
-    set time(value: string) {
-        this.setText(this._time, value);
-    }
-    set label(value: string) {
-        this.setText(this._label, value);
-    }
-    set nextBid(value: number) {
-        this._input.value = String(value);
-    }
-    set history(value: number[]) {
-        this._bids.replaceChildren(...value.map(item => createElement<HTMLUListElement>('li', {
-            className: 'lot__history-item',
-            textContent: formatNumber(item)
-        })));
-    }
-
-    set status(value: LotStatus) {
-        if (value !== 'active') {
-            this.setHidden(this._history);
-            this.setHidden(this._form);
-        } else {
-            this.setVisible(this._history);
-            this.setVisible(this._form);
-        }
-    }
-
-    focus() {
-        this._input.focus();
+    set category(value: string) {
+        this.setText(this._category, value);
+        this._category.classList.add(this.categoryProperties[value]);
     }
 }
-
-export interface BidStatus {
-    amount: number;
-    status: boolean;
-}
-
-/*export class BidItem extends Card<BidStatus> {
-    protected _amount: HTMLElement;
-    protected _status: HTMLElement;
-    protected _selector: HTMLInputElement;
-
-    constructor(container: HTMLElement, actions?: ICardActions) {
-        super('bid', container, actions);
-        this._amount = ensureElement<HTMLElement>(`.bid__amount`, container);
-        this._status = ensureElement<HTMLElement>(`.bid__status`, container);
-        this._selector = container.querySelector(`.bid__selector-input`);
-
-        if (!this._button && this._selector) {
-            this._selector.addEventListener('change', (event: MouseEvent) => {
-                actions?.onClick?.(event);
-            })
-        }
-    }
-
-    set status({ amount, status }: BidStatus) {
-        this.setText(this._amount, formatNumber(amount));
-
-        if (status) this.setVisible(this._status);
-        else this.setHidden(this._status);
-    }
-}*/
