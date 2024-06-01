@@ -78,13 +78,9 @@ interface ICard extends IProduct {
 Интерфейс для отображения формы выбора способа оплаты и адреса доставки:
 ```
 interface IOrderAddress {
-    payment: TPaymentMethod;
+    payment: string;
     address: string;
 }
-```
-Тип данных для выбора способа оплаты:
-```
-type TPaymentMethod = 'cash' | 'online' | null;
 ```
 Интерфейс для отображения формы контактных данных:
 ```
@@ -368,11 +364,11 @@ interface IEventEmitter {
 
 Свойства класса:
 - `address: string` - адрес доставки.
-- `payment: TPaymentMethod` - способ оплаты заказа, выбранный пользователем.
+- `payment: string` - способ оплаты заказа, выбранный пользователем.
 
 Методы:
 - `set address` (value: string) - устанавливает адрес доставки.
-- `set payment` (value: TPaymentMethod) - устанавливает способ оплаты.
+- `set payment` (value: string) - устанавливает способ оплаты.
 
 #### Класс OrderContacts
 Класс отвечает за хранение и изменение данных пользователя при оформлении заказа. Предназначен для отображения и управления формой контактов.
@@ -386,7 +382,7 @@ interface IEventEmitter {
 
 Методы:
 - `set phone` (value: string) - устанавливает номер телефона в форме контактов.
-- `set email` (value: TPaymentMethod) - устанавливает адрес электронной поты в форме контактов.
+- `set email` (value: string) - устанавливает адрес электронной поты в форме контактов.
 
 ### Слой коммуникации
 ### Взаимодействие компонентов

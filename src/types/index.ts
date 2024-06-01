@@ -1,67 +1,104 @@
-interface IAppState {
+export interface IAppState {
 	catalog: IProduct[];
 	basket: IProduct[];
 	preview: string | null;
 	order: IOrder | null;
 }
 
-interface IPage {
+export interface IPage {
     counter: number;
     catalog: HTMLElement[];
     locked: boolean;
 }
 
-interface IProduct {
+export interface IProduct {
     id: string;
     description: string;
     image: string;
     title: string;
     category: string;
     price: number | null;
+    getId(): string;
 }
 
-interface ICard extends IProduct {
+export interface ICard extends IProduct {
     button?: string;
 }
 
-interface IOrderAddress {
-    payment: TPaymentMethod;
+export interface IOrderAddress {
+    payment: string;
     address: string;
 }
 
-interface IOrderContacts {
+export interface IOrderContacts {
     email: string;
     phone: string;
 }
 
-interface IOrder extends IOrderForm {
+/*export interface IOrder extends IOrderForm {
     items: string[];
     total: number;
+}*/
+
+export interface IOrder {
+	id: string;
+	payment: string;
+	email: string;
+	phone: string;
+	address: string;
+	total: number;
+	items: IProduct[];
 }
 
-interface IOrderResult {
-    id: string;
+export interface IOrderAPI {
+	payment: string;
+	email: string;
+	phone: string;
+	address: string;
+	total: number;
+	items: string[];
+}
+
+
+export interface IOrderResult {
+    id: string[];
     total: number;
 }
 
-interface ISuccess {
+export interface ISuccess {
     total: number;
 }
 
-interface IModalData {
+export interface IModalData {
     content: HTMLElement;
 }
   
-interface IBasketView {
+export interface IBasketView {
     items: HTMLElement[];
     total: number;
+    button: HTMLButtonElement;
 }
 
-interface IEventEmitter {
+export interface IBasketModel {
+    items: IProduct[];
+    getTotal(): number;
+    add(id: IProduct): void;
+    remove(id: IProduct): void;
+    clearBasket(): void;
+}
+
+export interface IBasketProduct {
+    deleteButton: string;
+    index: number;
+    title: string;
+    price: number;
+}
+
+export interface IEventEmitter {
     emit: (event: string, data: unknown) => void;
 }
 
-type IBasketItem = Pick<IProduct, 'id' | 'title' | 'price'>;
-type TPaymentMethod = 'cash' | 'online' | null;
-type IOrderForm = IOrderAddress & IOrderContacts;
-type FormErrors = Partial<Record<keyof IOrder, string>>;
+export type IBasketItem = Pick<IProduct, 'id' | 'title' | 'price'>;
+//export type TPaymentMethod = 'cash' | 'online' | null;
+export type IOrderForm = IOrderAddress & IOrderContacts;
+export type IFormErrors = Partial<Record<keyof IOrder, string>>;

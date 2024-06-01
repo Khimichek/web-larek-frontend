@@ -1,3 +1,5 @@
+import {API_URL, CDN_URL} from '../../utils/constants'
+
 export type ApiListResponse<Type> = {
     total: number,
     items: Type[]
