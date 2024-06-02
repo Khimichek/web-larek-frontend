@@ -8,12 +8,12 @@ import {Page} from "./components/Page";
 //import {Auction, AuctionItem, BidItem, CatalogItem} from "./components/Card";
 import {cloneTemplate, createElement, ensureElement} from "./utils/utils";
 import {Modal} from "./components/common/Modal";
-import {Basket, BasketProduct} from "./components/common/Basket";
+import {Basket, BasketProduct} from "./components/Basket";
 //import {Tabs} from "./components/common/Tabs";
 import {IProduct, IOrderResult, IOrderAddress, IOrderContacts, IOrderForm, ICard} from "./types";
 import { Card, IButtonOptions } from './components/Card';
 import {OrderAddress, OrderContacts} from "./components/Order";
-import {Success} from "./components/common/Success";
+import {Success} from "./components/Success";
 
 const events = new EventEmitter();
 const api = new WebLarekAPI(CDN_URL, API_URL);

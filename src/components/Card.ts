@@ -49,7 +49,7 @@ export class Card extends Component<ICard> {
         this._category = container.querySelector(`.${blockName}__category`)
 
 		if (buttonOptions?.disabledButton) {
-			this.setDisabled(this._button, buttonOptions.disabledButton);
+			this.setDisabled(this._button, true);
 			this.setText(this._button, buttonOptions.buttonText);
 		}
         

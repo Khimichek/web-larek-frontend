@@ -1,8 +1,8 @@
-import {Component} from "../base/Component";
-import {cloneTemplate, createElement, ensureElement, formatNumber} from "../../utils/utils";
-import {EventEmitter} from "../base/Events";
-import { IBasketProduct } from "../../types";
-import { Product } from "../AppData";
+import {Component} from "./base/Component";
+import {cloneTemplate, createElement, ensureElement, formatNumber} from "../utils/utils";
+import {EventEmitter} from "./base/Events";
+import { IBasketProduct } from "../types";
+import { Product } from "./AppData";
 
 interface IBasketView {
     items: HTMLElement[];
@@ -38,14 +38,18 @@ export class Basket extends Component<IBasketView> {
     set items(items: HTMLElement[]) {
         this._list.replaceChildren(...items);
         if (items.length > 0) {
-            this.setDisabled(this._button, false);
-        } else {
-            this.setDisabled(this._button, true);
-            };
-        }
+            this.toggleButton(false);
+        }   else {
+                this.toggleButton(true);
+            }
+    }
 
     set total(total: number) {
         this.setText(this._total, `${formatNumber(total)} синапсов`);
+    }
+
+    toggleButton (state: boolean) {
+        this.setDisabled(this._button, state);
     }
 }
 
