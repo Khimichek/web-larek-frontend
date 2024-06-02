@@ -1,6 +1,6 @@
 import {Component} from "../base/Component";
 import {cloneTemplate, createElement, ensureElement, formatNumber} from "../../utils/utils";
-import {EventEmitter} from "../base/events";
+import {EventEmitter} from "../base/Events";
 import { IBasketProduct } from "../../types";
 import { Product } from "../AppData";
 

@@ -2,7 +2,7 @@ import './scss/styles.scss';
 
 import {WebLarekAPI} from "./components/WebLarekApi";
 import {API_URL, CDN_URL} from "./utils/constants";
-import {EventEmitter} from "./components/base/events";
+import {EventEmitter} from "./components/base/Events";
 import {AppState, CatalogChangeEvent, Product} from "./components/AppData";
 import {Page} from "./components/Page";
 //import {Auction, AuctionItem, BidItem, CatalogItem} from "./components/Card";

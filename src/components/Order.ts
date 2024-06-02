@@ -1,6 +1,6 @@
 import { Form } from "./common/Form";
 import {IOrderContacts, IOrderAddress, IOrderForm} from "../types/index";
-import {EventEmitter, IEvents} from "./base/events";
+import {EventEmitter, IEvents} from "./base/Events";
 import {ensureElement} from "../utils/utils";
 
 export class OrderAddress extends Form<IOrderAddress> {
