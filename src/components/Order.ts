@@ -19,16 +19,16 @@ export class OrderAddress extends Form<IOrderAddress> {
         if (this._cashButton) {
 			this._cashButton.addEventListener('click', (el) => {
                 el.preventDefault();
-                this.toggleClass(this._cashButton, 'button_alt-active', true);
-                this.toggleClass(this._onlineButton, 'button_alt-active', false);
+                this.toggleCash();
+                this.toggleCard(false);
 				this.setPayment('payment', 'При получении');
 			});
 		}
 		if (this._onlineButton) {
 			this._onlineButton.addEventListener('click', (el) => {
                 el.preventDefault;
-                this.toggleClass(this._onlineButton, 'button_alt-active', true);
-                this.toggleClass(this._cashButton, 'button_alt-active', false);
+                this.toggleCard();
+                this.toggleCash(false);
 				this.setPayment('payment', 'Онлайн');
 			});
 		}
@@ -37,6 +37,14 @@ export class OrderAddress extends Form<IOrderAddress> {
     set address(value: string) {
         (this.container.elements.namedItem('address') as HTMLInputElement).value = '';
     }
+
+    toggleCard(state: boolean = true) {
+        this.toggleClass(this._onlineButton, 'button_alt-active', state);
+    }
+      
+    toggleCash(state: boolean = true) {
+        this.toggleClass(this._cashButton, 'button_alt-active', state);
+    } 
 
     setPayment(field: keyof IOrderForm, value: string) {
         this.events.emit('order.payment:change', {field, value,});
