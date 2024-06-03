@@ -63,13 +63,13 @@ export class OrderContacts extends Form<IOrderContacts> {
         this._button = container.querySelector('.button[type="submit"]');
         this._email = this.container.querySelector('input[name="email"]');
         this._phone = this.container.querySelector('button[type="submit"]');
-    
-        if (this._button) {
-            this._button.addEventListener('click', () => {
-                events.emit('success:open');
-            });
-        }
+
+        this.container.addEventListener('submit', (event: Event) => {
+            event.preventDefault();
+            this.events.emit('success:open');
+          });
     }
+
 
     set phone(value: string) {
         (this.container.elements.namedItem('phone') as HTMLInputElement).value = value;
