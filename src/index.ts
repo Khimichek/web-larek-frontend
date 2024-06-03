@@ -106,9 +106,7 @@ events.on('success:open', () => {
                 content: success.render({})
             });
         })
-        .catch(err => {
-            console.error(err);
-        })
+        .catch(console.error)
 });
 
 events.on('success:close', () => {
@@ -185,9 +183,7 @@ events.on('preview:changed', (item: Product) => {
 					buttonText: 'Уже в корзине',
 				});
 			})
-			.catch((err) => {
-				console.error(err);
-			});
+			.catch(console.error)
 	} else {
 		modal.close();
 	}
@@ -213,9 +209,7 @@ events.on('modal:close', () => {
 // Получаем лоты с сервера
 api.getProductList()
     .then(appData.setCatalog.bind(appData))
-    .catch(err => {
-        console.error(err);
-    });
+	.catch(console.error)
 
 // Выводим карточки
 events.on('items:changed', () => {
