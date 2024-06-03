@@ -19,16 +19,16 @@ export class OrderAddress extends Form<IOrderAddress> {
         if (this._cashButton) {
 			this._cashButton.addEventListener('click', (el) => {
                 el.preventDefault();
-				this._cashButton.classList.add('button_alt-active');
-				this._onlineButton.classList.remove('button_alt-active');
+                this.toggleClass(this._cashButton, 'button_alt-active', true);
+                this.toggleClass(this._onlineButton, 'button_alt-active', false);
 				this.setPayment('payment', 'При получении');
 			});
 		}
 		if (this._onlineButton) {
 			this._onlineButton.addEventListener('click', (el) => {
                 el.preventDefault;
-				this._onlineButton.classList.add('button_alt-active');
-				this._cashButton.classList.remove('button_alt-active');
+                this.toggleClass(this._onlineButton, 'button_alt-active', true);
+                this.toggleClass(this._cashButton, 'button_alt-active', false);
 				this.setPayment('payment', 'Онлайн');
 			});
 		}
